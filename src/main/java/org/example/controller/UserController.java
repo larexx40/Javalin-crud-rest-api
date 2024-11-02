@@ -9,6 +9,7 @@ import org.example.service.UserService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.regex.Pattern;
 
 public class UserController {
@@ -39,12 +40,13 @@ public class UserController {
         //validate user
         List<String> validationErrors = userInputValidator(user);
         if(!validationErrors.isEmpty()){
-            ctx.status(400).json(new ApiResponse<>( "Validation errors", validationErrors));
+            ctx.status(400).json(ApiResponse.error( "Validation errors", validationErrors));
             return;
         }
+        user.setId(UUID.randomUUID().toString());
 
-        userService.addUser(user);
-        ctx.status(201).json(new ApiResponse<User>( "User added successfully", user));
+        User newUser = userService.addUser(user);
+        ctx.status(201).json(new ApiResponse<User>( "User added successfully", newUser));
     }
 
     private void deleteUser(Context ctx){
@@ -64,7 +66,7 @@ public class UserController {
         //validate input
         List<String> validationErrors = userInputValidator(updateUser);
         if(!validationErrors.isEmpty()){
-            ctx.status(400).json(new ApiResponse<>( "Validation errors", validationErrors));
+            ctx.status(400).json(ApiResponse.error( "Validation errors", validationErrors));
             return;
         }
         boolean update = userService.updateUser(userId, updateUser);

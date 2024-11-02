@@ -5,6 +5,7 @@ import org.example.model.User;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 public class UserService {
     private final List<User> users = new ArrayList<>();
@@ -13,8 +14,10 @@ public class UserService {
         return users;
     }
 
-    public void addUser(User user) {
+    public User addUser(User user) {
+        user.setId(UUID.randomUUID().toString());
         users.add(user);
+        return user;
     }
 
     public boolean updateUser(String id ,User newUser) {
