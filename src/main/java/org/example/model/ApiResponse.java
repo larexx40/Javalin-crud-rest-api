@@ -11,6 +11,7 @@ public class ApiResponse<T> {
     public static<T> ApiResponse<T> error(String message, List<String> errors) {
         ApiResponse<T> response = new ApiResponse<>(message, null);
         response.setErrors(errors);
+        response.setStatus(false);
         return response;
     }
 
