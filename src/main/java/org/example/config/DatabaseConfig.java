@@ -1,4 +1,4 @@
-package org.example;
+package org.example.config;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -8,7 +8,7 @@ import org.codejargon.fluentjdbc.api.FluentJdbcBuilder;
 
 import javax.sql.DataSource;
 
-public class DBConfig {
+public class DatabaseConfig {
     private static HikariDataSource dataSource;
     private static FluentJdbc fluentJdbc;
 
