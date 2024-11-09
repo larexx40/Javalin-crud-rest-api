@@ -18,7 +18,7 @@ public class Main {
                 .start(7070);
 
         UserService userService = new UserService();
-        UserController userController = new UserController(userService);
+        UserController userController = new UserController();
         userController.userRoutes(app);
     }
 
