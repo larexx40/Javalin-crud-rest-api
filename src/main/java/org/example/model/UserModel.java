@@ -27,8 +27,8 @@ public class UserModel {
                 .firstResult(UserMapper::map);
     }
 
-    public void addUser(final User user) {
-        fluentJdbc.query()
+    public boolean addUser(final User user) {
+        UpdateResult result = fluentJdbc.query()
                 .update("INSERT INTO users (id, name, password, email, username, phoneNumber) VALUES (:id, :name, :password, :email, :username, :phoneNumber) ")
                 .namedParam("id", user.getId())
                 .namedParam("name", user.getName())
@@ -37,6 +37,7 @@ public class UserModel {
                 .namedParam("username", user.getUsername().orElse(null))
                 .namedParam("phoneNumber", user.getPhoneNumber().orElse(null))
                 .run();
+        return result.affectedRows() > 0;
     }
 
     public boolean updateUser(String id, User newUser) {
