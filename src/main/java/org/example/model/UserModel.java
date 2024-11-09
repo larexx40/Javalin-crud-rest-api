@@ -28,29 +28,39 @@ public class UserModel {
     }
 
     public boolean addUser(final User user) {
-        UpdateResult result = fluentJdbc.query()
-                .update("INSERT INTO users (id, name, password, email, username, phoneNumber) VALUES (:id, :name, :password, :email, :username, :phoneNumber) ")
-                .namedParam("id", user.getId())
-                .namedParam("name", user.getName())
-                .namedParam("password", user.getPassword())
-                .namedParam("email", user.getEmail())
-                .namedParam("username", user.getUsername().orElse(null))
-                .namedParam("phoneNumber", user.getPhoneNumber().orElse(null))
-                .run();
-        return result.affectedRows() > 0;
+        try {
+            UpdateResult result = fluentJdbc.query()
+                    .update("INSERT INTO users (id, name, password, email, username, phoneNumber) VALUES (:id, :name, :password, :email, :username, :phoneNumber) ")
+                    .namedParam("id", user.getId())
+                    .namedParam("name", user.getName())
+                    .namedParam("password", user.getPassword())
+                    .namedParam("email", user.getEmail())
+                    .namedParam("username", user.getUsername().orElse(null))
+                    .namedParam("phoneNumber", user.getPhoneNumber().orElse(null))
+                    .run();
+            return result.affectedRows() > 0;
+        }catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     public boolean updateUser(String id, User newUser) {
-       UpdateResult result = fluentJdbc.query()
-                .update("UPDATE users SET name = :name, email = :email, password = :password, username = :username, phoneNumber = :phoneNumber WHERE id = :id")
-               .namedParam("name", newUser.getName())
-               .namedParam("email", newUser.getEmail())
-               .namedParam("password", newUser.getPassword())
-               .namedParam("username", newUser.getUsername())
-               .namedParam("phoneNumber", newUser.getPhoneNumber())
-               .namedParam("id", id)
-               .run();
-       return result.affectedRows() > 0;
+        try {
+            UpdateResult result = fluentJdbc.query()
+                    .update("UPDATE users SET name = :name, email = :email, password = :password, username = :username, phoneNumber = :phoneNumber WHERE id = :id")
+                    .namedParam("name", newUser.getName())
+                    .namedParam("email", newUser.getEmail())
+                    .namedParam("password", newUser.getPassword())
+                    .namedParam("username", newUser.getUsername())
+                    .namedParam("phoneNumber", newUser.getPhoneNumber())
+                    .namedParam("id", id)
+                    .run();
+            return result.affectedRows() > 0;
+        }catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     public boolean deleteUser(final String id) {
