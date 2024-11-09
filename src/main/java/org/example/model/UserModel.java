@@ -64,11 +64,16 @@ public class UserModel {
     }
 
     public boolean deleteUser(final String id) {
-        UpdateResult result = fluentJdbc.query()
-                .update("DELETE  FROM users WHERE id = :id")
-                .namedParam("id", id)
-                .run();
-        return result.affectedRows() > 0;
+        try {
+            UpdateResult result = fluentJdbc.query()
+                    .update("DELETE  FROM users WHERE id = :id")
+                    .namedParam("id", id)
+                    .run();
+            return result.affectedRows() > 0;
+        }catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
 
