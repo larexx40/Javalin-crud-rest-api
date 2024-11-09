@@ -1,47 +1,103 @@
 package org.example.service;
 
-import org.example.model.User;
+import org.example.entity.User;
+import org.example.model.ApiResponse;
+import org.example.model.UserModel;
+import org.example.response.CustomResponse;
+import org.example.validation.UserValidation;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.awt.image.PixelGrabber;
+import java.util.*;
 
 public class UserService {
-    private final List<User> users = new ArrayList<>();
+    private final UserModel userModel;
 
-    public List<User> getUsers() {
-        return users;
+    public UserService() {
+        this.userModel = new UserModel();
     }
 
-    public User addUser(User user) {
-        user.setId(UUID.randomUUID().toString());
-        users.add(user);
-        return user;
+    public CustomResponse getUsers() {
+        List<User> users = this.userModel.getUsers();
+
+        return CustomResponse.success("User fetched successfully", users);
     }
 
-    public boolean updateUser(String id ,User newUser) {
-        Optional<User> existingUser = users.stream().filter(user -> user.getId().equals(id)).findFirst();
-        if (existingUser.isPresent()) {
-            User user = existingUser.get();
-            user.setName(newUser.getName());
-            user.setEmail(newUser.getEmail());
-            user.setPassword(newUser.getPassword());
-//            users.add(user);
-            return true;
+    public CustomResponse addUser(User user) {
+        List<String> errors = UserValidation.validateUser(user);
+        if (!errors.isEmpty()) {
+            return CustomResponse.error("Invalid user input", errors);
         }
-        return false;
+
+        try{
+            //generate unique id for the user
+            user.setId(UUID.randomUUID().toString());
+
+            boolean result = this.userModel.addUser(user);
+            if(result){
+                return  CustomResponse.success("User added successfully", user);
+            }else {
+                return  CustomResponse.error("Error adding user", null);
+            }
+
+        }catch (Exception e) {
+            errors.add(e.getMessage());
+            return  CustomResponse.error("Error connecting to database", errors);
+        }
+
     }
 
-    public void removeUser(User user) {
-        users.remove(user);
+    public CustomResponse updateUser(String id , User newUser) {
+        //validate user for error
+        List<String> errors = UserValidation.validateUser(newUser);
+        if (!errors.isEmpty()) {
+            return CustomResponse.error("Invalid user input", errors);
+        }
+
+        try {
+            //first get the user and return appropriate error
+            Optional<User> existingUser = this.userModel.getUserById(id);
+            if (existingUser.isEmpty()) {
+                return CustomResponse.error("User with id " + id + " not found", null);
+            }
+
+            newUser.setId(id);
+            boolean result = this.userModel.updateUser(id, newUser);
+            if (result) {
+                return CustomResponse.success("User updated successfully", newUser);
+            } else {
+                return CustomResponse.error("Error updating user", null);
+            }
+        }catch (Exception e) {
+            errors.add(e.getMessage());
+            return CustomResponse.error("Error connecting to database", errors);
+        }
+
     }
 
-    public boolean deleteUserById(String id){
-        return users.removeIf(user -> user.getId().equals(id));
+    public CustomResponse deleteUserById(String id) {
+        try{
+            Optional<User> existingUser = this.userModel.getUserById(id);
+            if (existingUser.isEmpty()) {
+                return CustomResponse.error("User with id " + id + " not found", null);
+            }
+            boolean result = this.userModel.deleteUser(id);
+            if (result) {
+                return CustomResponse.success("User deleted successfully", null);
+            }
+            return CustomResponse.error("Error deleting user", null);
+        }catch (Exception e) {
+            List<String> errors = Collections.singletonList(e.getMessage());
+            return CustomResponse.error("Error connecting to database", errors);
+
+        }
     }
 
-    public Optional<User> getUserById(String id){
-        return users.stream().filter(user -> user.getId().equals(id)).findFirst();
+
+    public CustomResponse getUserById(String id){
+        Optional<User> user = this.userModel.getUserById(id);
+        if(user.isEmpty()){
+            return CustomResponse.error("User with id " + id + " not found", null);
+        }
+        return CustomResponse.success("User fetched successfully", user);
     }
 }
