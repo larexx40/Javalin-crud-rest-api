@@ -2,6 +2,7 @@ package org.example.model;
 
 import org.codejargon.fluentjdbc.api.FluentJdbc;
 import org.codejargon.fluentjdbc.api.query.UpdateResult;
+import org.example.config.DatabaseConfig;
 import org.example.entity.User;
 import org.example.mapper.UserMapper;
 
@@ -9,10 +10,10 @@ import java.util.List;
 import java.util.Optional;
 
 public class UserModel {
-    private  final FluentJdbc fluentJdbc;
+    private final FluentJdbc fluentJdbc;
 
-    public UserModel(final FluentJdbc fluentJdbc) {
-        this.fluentJdbc = fluentJdbc;
+    public UserModel() {
+        this.fluentJdbc = DatabaseConfig.getFluentJdbc();
     }
 
     public List<User> getUsers() {
