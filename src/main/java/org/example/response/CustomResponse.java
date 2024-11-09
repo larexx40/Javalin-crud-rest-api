@@ -7,6 +7,7 @@ public class CustomResponse {
     private String message;
     private Object data;
     private List<String> error;
+    private  int statusCode;
 
     // Constructor for a successful response
     public CustomResponse(boolean status, String message, Object data) {
@@ -45,5 +46,13 @@ public class CustomResponse {
 
     public List<String> getError() {
         return error;
+    }
+
+    public int getStatusCode() {
+        return statusCode;
+    }
+
+    public void setStatusCode(int statusCode) {
+        this.statusCode = statusCode;
     }
 }

@@ -41,7 +41,9 @@ public class UserService {
 
         }catch (Exception e) {
             errors.add(e.getMessage());
-            return  CustomResponse.error("Error connecting to database", errors);
+            CustomResponse response = CustomResponse.error("Error connecting to database", errors);
+            response.setStatusCode(500);
+            return  response;
         }
 
     }
@@ -69,7 +71,9 @@ public class UserService {
             }
         }catch (Exception e) {
             errors.add(e.getMessage());
-            return CustomResponse.error("Error connecting to database", errors);
+            CustomResponse response = CustomResponse.error("Error connecting to database", errors);
+            response.setStatusCode(500);
+            return  response;
         }
 
     }
@@ -87,7 +91,10 @@ public class UserService {
             return CustomResponse.error("Error deleting user", null);
         }catch (Exception e) {
             List<String> errors = Collections.singletonList(e.getMessage());
-            return CustomResponse.error("Error connecting to database", errors);
+            CustomResponse response = CustomResponse.error("Error connecting to database", errors);
+            response.setStatusCode(500);
+            return  response;
+
 
         }
     }
