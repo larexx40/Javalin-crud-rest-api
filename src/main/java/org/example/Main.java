@@ -31,11 +31,13 @@ public class Main {
         // Configure Gson
         Gson gson = new GsonBuilder().serializeNulls().create();
         JsonMapper gsonMapper = new JsonMapper() {
+            @NotNull
             @Override
             public String toJsonString(@NotNull Object obj, @NotNull Type type) {
                 return gson.toJson(obj, type);
             }
 
+            @NotNull
             @Override
             public <T> T fromJsonString(@NotNull String json, @NotNull Type targetType) {
                 return gson.fromJson(json, targetType);
@@ -55,7 +57,7 @@ public class Main {
         AuthRoute authRoute= new AuthRoute();
         authRoute.routes(app);
         
-        app.exception(Exception.class, (e, ctx) -> handleException(e, ctx));
+        app.exception(Exception.class, Main::handleException);
     }
 
     public static  void handleException(Exception e, Context ctx) {
