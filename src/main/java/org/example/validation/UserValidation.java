@@ -23,17 +23,13 @@ public class UserValidation {
         }
 
         // Optional fields validation (if they are non-null)
-        user.getUsername().ifPresent(username -> {
-            if (username.isEmpty()) {
-                errors.add("Username cannot be empty.");
-            }
-        });
+//        user.getUsername().ifPresent(username -> {
+//            if (username.isEmpty()) {
+//                errors.add("Username cannot be empty.");
+//            }
+//        });
 
-        user.getPhoneNumber().ifPresent(phoneNumber -> {
-            if (phoneNumber.isEmpty()) {
-                errors.add("Phone number cannot be empty.");
-            }
-        });
+
 
         return errors;
     }
